@@ -68,6 +68,8 @@ function BidsTableMobile({ bids }: BidsTableMobileProps) {
         a === 'Сегодня' ? -1 : b === 'Сегодня' ? 1 : new Date(b).getTime() - new Date(a).getTime()
     );
 }, [bids]);
+console.log("hi");
+
     
     return (
         <div className='flex flex-col gap-4 bg-secondary'>
