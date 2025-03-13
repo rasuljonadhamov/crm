@@ -37,6 +37,11 @@ export const useGetOrders = (size: number) => {
         setError(null)
 
         try {
+
+            console.log(`[FETCH BIDS] Called | force: ${force}`);
+            console.trace("[FETCH BIDS TRACE]"); // Shows call stack in console
+
+
             const token = localStorage.getItem('authToken') || ''
 
             const currentFilters = filtersRef.current

@@ -33,9 +33,7 @@ export const useGetBids = (size = 20) => {
     const fetchBids = useCallback(async (force = false, append = false) => {
         
         if (loading || isFetchingRef.current) return;
-        console.log(`[FETCH BIDS] Called | force: ${force}, append: ${append}`);
-        console.trace("[FETCH BIDS TRACE]"); // Shows call stack in console
-
+       
         setLoading(true)
         isFetchingRef.current = true;
         setError(null);

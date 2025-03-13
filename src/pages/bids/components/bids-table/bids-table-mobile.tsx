@@ -49,24 +49,26 @@ function BidsTableMobile({ bids }: BidsTableMobileProps) {
     }, [])
 
     const { formatNumber } = useNumberFormatter()
+
     const groupedBids = useMemo(() => {
-        const groups = {}
-        const today = format(new Date(), 'dd.MM.yyyy', { locale: ru })
+    const groups = {};
+    const today = format(new Date(), 'dd.MM.yyyy', { locale: ru });
+    const uniqueBids = Array.from(new Map(bids.map(bid => [bid.id || bid.bgruzId, bid])).values());
 
-        bids.forEach(bid => {
-            const date = format(new Date(bid.loadingDate), 'dd.MM.yyyy', { locale: ru })
-            const label = date === today ? 'Сегодня' : date
-            if (!groups[label]) {
-                groups[label] = []
-            }
-            groups[label].push(bid)
-        })
-        return Object.entries(groups).sort(([a], [b]) =>
-            //@ts-expect-error надо разобраться
-            a === 'Сегодня' ? -1 : b === 'Сегодня' ? 1 : new Date(b) - new Date(a)
-        )
-    }, [bids])
+    uniqueBids.forEach(bid => {
+        const date = format(new Date(bid.loadingDate), 'dd.MM.yyyy', { locale: ru });
+        const label = date === today ? 'Сегодня' : date;
+        if (!groups[label]) {
+            groups[label] = [];
+        }
+        groups[label].push(bid);
+    });
 
+    return Object.entries(groups).sort(([a], [b]) =>
+        a === 'Сегодня' ? -1 : b === 'Сегодня' ? 1 : new Date(b).getTime() - new Date(a).getTime()
+    );
+}, [bids]);
+    
     return (
         <div className='flex flex-col gap-4 bg-secondary'>
             <ScrollArea className='flex flex-col gap-4 max-h-[87vh] w-full overflow-auto rounded-md border'>
@@ -74,12 +76,14 @@ function BidsTableMobile({ bids }: BidsTableMobileProps) {
                     <div key={date} className='flex flex-col gap-2'>
                         <h2 className='text-lg font-semibold p-2'>{date}</h2>
                         {/* @ts-expect-error надо разобраться */}
-                        {bids.map(bid => {
+                        {bids.map((bid , index) => {
                             const isDisabled =
                                 !bid.bestSalePrice || bid.status === 'canceled' || bid.ownState === 'approved'
 
+                                const uniqueKey = bid.id || `${bid.bgruzId}-${index}`;
+
                             return (
-                                <div key={bid.persistentId} className='p-2 shadow-md rounded-lg bg-white'>
+                                <div key={uniqueKey} className='p-2 shadow-md rounded-lg bg-white'>
                                     <div onClick={() => handleOpenModal(bid)} className='w-full !p-0 flex items-center flex-row-reverse gap-2'>
                                         <div  className='w-1/2'>
                                             <div className='ml-auto flex flex-col'>
