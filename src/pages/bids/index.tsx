@@ -16,16 +16,12 @@ const BidsTableMobile = lazy(() => import('./components/bids-table/bids-table-mo
 
 export default function BidsPage() {
     const [searchParams] = useSearchParams()
-    const [size, setSize] = useState(Number(searchParams.get('size')) || 500)
+    const [size, setSize] = useState(Number(searchParams.get('size')) || 20)
 
-    const { bids, hasMore, loading, refreshBids } = useGetBids(size)
+    const { bids, hasMore, loading, refreshBids, lastBidRef  } = useGetBids(size)
     const { setFilters } = useFilter()
 
-    const loadMore = () => {
-        if (hasMore) {
-            setSize(prev => prev + 50)
-        }
-    }
+
     useWebSocket(refreshBids, () => {})
 
     
@@ -37,11 +33,16 @@ export default function BidsPage() {
                 <FilterProvider onFiltersChange={setFilters}>
                     <div>
                         <div className='hidden md:block'>
-                            <BidsTable bids={bids || []} loading={loading} loadMore={loadMore} hasMore={hasMore} />
+                            <BidsTable 
+                                bids={bids || []} 
+                                loading={loading}
+                                hasMore={hasMore}
+                                lastBidRef={lastBidRef}
+                            />
                         </div>
 
                         <div className='md:hidden'>
-                            <BidsTableMobile bids={bids || []} />
+                            <BidsTableMobile bids={bids || []}  />
                         </div>
                     </div>
                 </FilterProvider>

@@ -18,7 +18,7 @@ export function RenderFilterMobile() {
     const location = useLocation()
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [searchParams] = useSearchParams()
-    const size = useMemo(() => Number(searchParams.get('size')) || 200, [searchParams])
+    const size = useMemo(() => Number(searchParams.get('size')) || 20, [searchParams])
     const { filters, handleFilterChange } = useFilter()
     const [localFilters, setLocalFilters] = useState(filters)
 
@@ -51,23 +51,28 @@ export function RenderFilterMobile() {
     }, [filters])
 
     const applyFilters = useCallback(() => {
+        if (!refreshData) return;
+
         Object.entries(localFilters).forEach(([key, value]) => {
             if (handleFilterChange) {
                 handleFilterChange(key, value)
             }
         })
+
         refreshData()
         setIsOpen(false)
-    }, [localFilters, refreshData, handleFilterChange])
+    }, [localFilters, handleFilterChange, refreshData])
 
     const resetFilters = useCallback(() => {
+        if (!refreshData) return;
+
         const emptyFilters = {};
         setLocalFilters(emptyFilters);
     
         Object.keys(filters).forEach((key) => {
             handleFilterChange(key, undefined);
         });
-    
+
         refreshData();
         setIsOpen(false);
     }, [filters, refreshData, handleFilterChange]);
