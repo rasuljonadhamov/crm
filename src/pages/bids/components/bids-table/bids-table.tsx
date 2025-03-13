@@ -14,7 +14,6 @@ import BidsInfoModal from '../bids-info-modal';
 import BidHeader from '../bids-header';
 import { deleteData, postData2 } from '@/api/api';
 import { Loader2 } from 'lucide-react';
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { useFilter } from '@/context/filter-context';
 import { FilterInput } from '@/components/shared/render-filter-input';
 
@@ -127,32 +126,12 @@ function BidsTable({ bids, hasMore, loading, lastBidRef }: BidsTableProps) {
                                         className="bg-[#EDEDED] border border-gray-300 whitespace-nowrap"
                                     >
                                         <div>
-                                            {header.column.columnDef.filterType !== 'range' ? (
-                                                <div className="text-center">
-                                                    <FilterInput
-                                                        column={header.column}
-                                                        handleFilterChange={handleFilterChange}
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    className="flex items-center gap-1 cursor-pointer px-3 py-5 md:px-3 md:py-2 text-base md:text-xl rounded-md bg-white"
-                                                    onClick={header.column.getToggleSortingHandler()}
-                                                >
-                                                    <div className="text-center">
-                                                        {flexRender(header.column.columnDef.header, header.getContext())}
-                                                    </div>
-                                                    {header.column.getIsSorted() ? (
-                                                        header.column.getIsSorted() === 'asc' ? (
-                                                            <ArrowUp className="h-4 w-4" />
-                                                        ) : (
-                                                            <ArrowDown className="h-4 w-4" />
-                                                        )
-                                                    ) : (
-                                                        <ArrowUpDown className="h-4 w-4 opacity-50" />
-                                                    )}
-                                                </div>
-                                            )}
+                                            <div className="text-center">
+                                                <FilterInput
+                                                    column={header.column}
+                                                    handleFilterChange={handleFilterChange}
+                                                />
+                                            </div>
                                         </div>
                                     </TableHead>
                                 ))}
